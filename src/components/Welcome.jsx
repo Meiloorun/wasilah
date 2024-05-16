@@ -1,24 +1,17 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 
 export default function Welcome({ currentUser }) {
   return (
-    <Container>
-        <img />
-        <h1>
-            Assalamo Alaikum, <span>{currentUser.firstname + ' ' + currentUser.secondname}</span>
-        </h1>
-    </Container>
-  )
+    <Box className="h-full flex justify-center items-center">
+      <Box className="text-center">
+        <Typography variant="h4" className="text-gray-200 mb-4">
+          Assalamo Alaikum
+        </Typography>
+        <Typography variant="h5" className="text-gray-400">
+          <span className="text-red-500">{`${currentUser.firstname} ${currentUser.secondname}`}</span>
+        </Typography>
+      </Box>
+    </Box>
+  );
 }
-
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    color: #fcfcfc;
-    span {
-        color: #fa3e3e;
-    }
-`;

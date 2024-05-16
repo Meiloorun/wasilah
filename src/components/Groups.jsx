@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { Box, Typography } from '@mui/material';
 
 export default function Groups({ groups, currentUser, changeGroup }) {
-  const [currentName, setCurrentName] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
-  const [groupArray, setGroupArray] = useState([])
+  const [groupArray, setGroupArray] = useState([]);
 
   useEffect(() => {
-    if (currentUser) {
-      setCurrentName(`${currentUser.firstname} ${currentUser.secondname}`);
-    }
-
     if (!Array.isArray(groups)) {
-        console.log("Converting groups to an array");
-        setGroupArray([groups])
-      } else {
-        setGroupArray([groups])
-      }
-  }, [currentUser, groups]);
+      setGroupArray([groups])
+    } else {
+      setGroupArray([groups])
+    }
+  }, [groups]);
 
   const changeCurrentGroup = (index, group) => {
     setCurrentSelected(index);
@@ -25,71 +19,26 @@ export default function Groups({ groups, currentUser, changeGroup }) {
   };
 
   return (
-    <Container>
-      <GroupsList>
-        {console.log(groupArray)}
-        {groupArray.length >= 0 ? (
+    <Box className="overflow-hidden bg-gray-800 font-montserrat">
+      <Box className="flex flex-col items-center overflow-auto pt-4 gap-2">
+        {groupArray.length > 0 ? (
           groupArray[0].groups.map((group, index) => (
-            <Group
+            <Box
               key={index}
-              selected={index === currentSelected}
               onClick={() => changeCurrentGroup(index, group)}
+              className={`w-11/12 cursor-pointer bg-gray-700 rounded-md p-2 transition duration-300 ease-in-out hover:bg-gray-600`}
             >
-              <GroupName>{group?.name || 'Unnamed Group'}</GroupName>
-              {console.log(group)}
-            </Group>
+              <Typography variant="h6" className="text-white text-center">
+                {group?.name || 'Unnamed Group'}
+              </Typography>
+            </Box>
           ))
         ) : (
-          <NoGroupsMessage>No groups found</NoGroupsMessage>
+          <Typography variant="h6" className="text-white">
+            No groups found
+          </Typography>
         )}
-      </GroupsList>
-    </Container>
+      </Box>
+    </Box>
   );
 }
-
-const Container = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  background-color: #464646;
-  overflow: hidden;
-  font-family: 'Montserrat', sans-serif;
-`;
-
-const GroupsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: auto;
-  gap: 1.5rem;
-  padding-top: 1rem; /* Added padding-top */
-  &::-webkit-scrollbar {
-    width: 0.2rem;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #656565;
-    border-radius: 1rem;
-  }
-`;
-
-const Group = styled.div`
-  background-color: ${({ selected }) => (selected ? '#acacac' : '#656565')};
-  min-height: 5rem;
-  width: 90%;
-  cursor: pointer;
-  border-radius: 0.2rem;
-  padding: 0.4rem;
-  gap: 1rem;
-  align-items: center;
-  display: flex;
-  transition: background-color 0.3s ease;
-`;
-
-const GroupName = styled.h3`
-  color: #fcfcfc;
-`;
-
-const NoGroupsMessage = styled.div`
-  color: #fcfcfc;
-  font-size: 1.2rem;
-  text-align: center;
-`;

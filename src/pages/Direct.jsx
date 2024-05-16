@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { allContactsRoute, host } from '../utils/APIRoutes';
@@ -8,6 +7,7 @@ import Navbar from '../components/Navbar';
 import Welcome from '../components/Welcome';
 import ChatContainer from '../components/ChatContainer';
 import { io } from "socket.io-client";
+import { Box, Grid } from '@mui/material';
 
 function Direct() {
   const socket = useRef();
@@ -48,44 +48,29 @@ function Direct() {
     };
   }, [currentUser]);
 
-  const handleChatchange = (chat) => {
+  const handleChatChange = (chat) => {
     setCurrentChat(chat);
   }
 
   return (
     <>
-    <Navbar />
-    <Container>
-      <div className="container">
-        <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatchange}/>
-        {
-          isLoaded && currentChat === undefined ? (<Welcome currentUser={currentUser}/>) : ( <ChatContainer currentChat={currentChat} currentUser={currentUser} isGroup={false} socket={socket}/> )
-        }
-        
-      </div>
-    </Container>
+      <Navbar />
+      <Box className="h-screen w-full flex justify-center items-center bg-gray-800">
+        <Grid container className="h-3/4 w-5/6 bg-gray-700 rounded-lg">
+          <Grid item xs={3} className="border-r border-gray-600">
+            <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatChange} />
+          </Grid>
+          <Grid item xs={9} className="p-4">
+            {isLoaded && currentChat === undefined ? (
+              <Welcome currentUser={currentUser} />
+            ) : (
+              <ChatContainer currentChat={currentChat} currentUser={currentUser} isGroup={false} socket={socket} />
+            )}
+          </Grid>
+        </Grid>
+      </Box>
     </>
   )
 }
 
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1rem;
-  align-items: center;
-  background-color: #222020;
-  .container {
-    height: 75vh;
-    width: 85vw;
-    background-color: #464646;
-    display: grid;
-    grid-template-columns: 25% 75%;
-    @media screen and (min-width: 720px) and (max-width:1080px) {
-      grid-template-columns: 25% 65%;
-    }
-  }
-`
-export default Direct
+export default Direct;

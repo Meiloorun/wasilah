@@ -1,14 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 
 export default function Messages() {
   return (
-    <Container>Messages</Container>
-  )
+    <Box className="h-full flex justify-center items-center">
+      <Typography variant="h6" className="text-gray-400">
+        No messages yet
+      </Typography>
+    </Box>
+  );
 }
-
-const Container = styled.div`
-    height: 80%;
-
-`;

@@ -1,63 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom"
-import styled from 'styled-components';
-import Logo from "../assets/Wasilah.svg";
-import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { registerRoute, getJamaats } from '../utils/APIRoutes';
 import { createIdentity } from '../utils/identity';
-import * as base64 from 'base64-js'
+import * as base64 from 'base64-js';
+import {
+  Box,
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+} from '@mui/material';
 
 function Register() {
-
   const nav = useNavigate();
   const [jamaats, setJamaats] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(localStorage.getItem('wasilah-user')) {
+    if (localStorage.getItem('wasilah-user')) {
       nav('/');
     }
-  })
+  }, [nav]);
 
   useEffect(() => {
     const fetchJamaats = async () => {
       try {
         const response = await axios.get(getJamaats);
         setJamaats(response.data.jamaats);
-        console.log(response.data.jamaats);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching Jamaats', error);
+        setLoading(false);
       }
     };
     fetchJamaats();
   }, []);
 
-
   const base64FromArrayBuffer = (arrayBuffer) => {
-    return (base64.fromByteArray(new Uint8Array(arrayBuffer)))
-};
+    return base64.fromByteArray(new Uint8Array(arrayBuffer));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const {publicSignedPreKey, oneTimePreKey, identityPubKey, registrationId} = await createIdentity();
+    const { publicSignedPreKey, oneTimePreKey, identityPubKey, registrationId } = await createIdentity();
     const publicSignedPreKeyBase64 = {
       keyId: publicSignedPreKey.keyId,
       publicKey: base64FromArrayBuffer(publicSignedPreKey.publicKey),
-      signature: base64FromArrayBuffer(publicSignedPreKey.signature)
+      signature: base64FromArrayBuffer(publicSignedPreKey.signature),
     };
-    
-    const oneTimePreKeyBase64 = oneTimePreKey.map(key => ({
-        keyId: key.keyId,
-        publicKey: base64FromArrayBuffer(key.publicKey)
+
+    const oneTimePreKeyBase64 = oneTimePreKey.map((key) => ({
+      keyId: key.keyId,
+      publicKey: base64FromArrayBuffer(key.publicKey),
     }));
 
     const identityPubKeyBase64 = base64FromArrayBuffer(identityPubKey);
 
-    console.log("publicSignedPreKey: ", publicSignedPreKey);
-    console.log("oneTimePreKey: ", oneTimePreKey);
-    console.log("identityPubKey: ", identityPubKey);
-    console.log("registrationId: " ,registrationId);
     if (handleValidation()) {
-      console.log("validated", registerRoute)
       const { password, firstname, secondname, email, aimsid, phonenumber, dateofbirth, jamaat, gender } = formData;
       const { data } = await axios.post(registerRoute, {
         firstname,
@@ -79,10 +88,10 @@ function Register() {
       }
       if (data.status === true) {
         localStorage.setItem('wasilah-user', JSON.stringify(data.user));
-        nav("/");
+        nav('/');
       }
     }
-  }
+  };
 
   const [formData, setFormData] = useState({
     firstname: '',
@@ -97,242 +106,226 @@ function Register() {
     gender: '',
   });
 
-  const [errors, setErrors] = useState({});
   const [validMsg, setValidMsg] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-};
+  };
 
   const handleValidation = () => {
-    setValidMsg("")
+    setValidMsg('');
     const { password, confirmPassword, firstname, secondname, email, aimsid, gender, dateofbirth, jamaat } = formData;
-    if (password !== confirmPassword){
-        setValidMsg("Your Confirmed Password was not the same as your Password.");
-        return false;
+    if (password !== confirmPassword) {
+      setValidMsg('Your Confirmed Password was not the same as your Password.');
+      return false;
     } else if (aimsid.length !== 5) {
-        setValidMsg("AIMS ID does not have the right length.");
-        return false;
-    } else if (email===""){
-        setValidMsg("You must enter an Email.");
-        return false;
-    } else if (firstname==="") {
-        setValidMsg("You must enter your First Name.");
-        return false;
-    } else if (secondname===""){
-        setValidMsg("You must enter your Second Name.");
-        return false;
-    } else if (gender===""){
-        setValidMsg("You must select your Gender.");
-    } else if (password===""){
-        setValidMsg("You must enter a Password.");
-    } else if (dateofbirth===""){
-        setValidMsg("You must enter your Date of Birth.");
-    } else if (jamaat===""){
-        setValidMsg("You must select your Jamaat.");
+      setValidMsg('AIMS ID does not have the right length.');
+      return false;
+    } else if (email === '') {
+      setValidMsg('You must enter an Email.');
+      return false;
+    } else if (firstname === '') {
+      setValidMsg('You must enter your First Name.');
+      return false;
+    } else if (secondname === '') {
+      setValidMsg('You must enter your Second Name.');
+      return false;
+    } else if (gender === '') {
+      setValidMsg('You must select your Gender.');
+      return false;
+    } else if (password === '') {
+      setValidMsg('You must enter a Password.');
+      return false;
+    } else if (dateofbirth === '') {
+      setValidMsg('You must enter your Date of Birth.');
+      return false;
+    } else if (jamaat === '') {
+      setValidMsg('You must select your Jamaat.');
+      return false;
     }
     return true;
-  }
+  };
 
   return (
-    <>
-    <Container>
-        <FormContainer>
-            <form onSubmit={(event)=>handleSubmit(event)}>
-            <Row>
-            <div>
-                <input
-                type="text"
-                name="firstname"
-                placeholder='First Name'
-                value={formData.firstname}
-                onChange={handleChange}
-                />
-                {errors.firstname && <span>{errors.firstname}</span>}
-            </div>
-            <div>
-                <input
-                type="text"
-                name="secondname"
-                placeholder='Second Name'
-                value={formData.secondname}
-                onChange={handleChange}
-                />
-                {errors.secondname && <span>{errors.secondname}</span>}
-            </div>
-            </Row>
-            <div>
-                <input
-                type="number"
-                name="aimsid"
-                placeholder='AIMS ID'
-                value={formData.aimsid}
-                onChange={handleChange}
-                />
-                {errors.aimsid && <span>{errors.aimsid}</span>}
-            </div>
-            <div>
-                <input
-                type="email"
-                name="email"
-                placeholder='Email'
-                value={formData.email}
-                onChange={handleChange}
-                />
-                {errors.email && <span>{errors.email}</span>}
-            </div>
-            <div>
-                <input
-                type="password"
-                name="password"
-                placeholder='Password'
-                value={formData.password}
-                onChange={handleChange}
-                />
-                {errors.password && <span>{errors.password}</span>}
-            </div>
-            <div>
-                <input
-                type="password"
-                name="confirmPassword"
-                placeholder='Confirm Password'
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                />
-                {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-            </div>
-            <Row>
-                <div>
-                    <label htmlFor="female">Female</label>
-                    <input type="radio" id="female" name="gender" value="female" onChange={handleChange} checked={formData.gender === 'female'} />
-                </div>
-                <div>
-                    <label htmlFor="male">Male</label>
-                    <input type="radio" id="male" name="gender" value="male" onChange={handleChange} checked={formData.gender === 'male'} />
-                </div>
-            </Row>
-            <div>
-                <label>Date of Birth</label>
-                <input
-                type="date"
-                name="dateofbirth"
-                value={formData.dateofbirth}
-                onChange={handleChange}
-                />
-                {errors.dateofbirth && <span>{errors.dateofbirth}</span>}
-            </div>
-            <div>
-              <input
-                type="tel"
-                name="phonenumber"
-                placeholder='Phone Number'
-                value={formData.phonenumber}
-                onChange={handleChange}
-              />
-              {errors.phonenumber && <span>{errors.phonenumber}</span>}
-            </div>
-            <div>
-                <label>Select Jamaat</label>
-                <select
-                    name="jamaat"
-                    value={formData.jamaat}
-                    onChange={handleChange}
-                >
-                    <option value="">Select Jamaat</option>
-                    {jamaats.map((jamaat) => (
-                        <option key={jamaat._id} value={jamaat._id}>
-                            {jamaat.name}
-                        </option>
-                    ))}
-                </select>
-                {errors.jamaat && <span>{errors.jamaat}</span>}
-            </div>
-            <div>
-                <button type="submit">Register</button>
-            </div>
-            <div>
-                <span><a>{validMsg}</a></span>
-            </div>
-            <span>
-                Already Registered? <Link to="/login">Login Here</Link>
-            </span>
-            </form>
-        </FormContainer>
-
-        <ImageContainer>
-        <img src={Logo} alt='Wasilah Logo' />
-      </ImageContainer>
-      </Container>
-    </>
-  )
+    <Container maxWidth="xl" className="h-screen flex justify-center items-center bg-gray-800">
+      <Box className="w-full max-w-md p-8 bg-gray-700 rounded-lg shadow-lg">
+        <Box component="form" onSubmit={handleSubmit} className="space-y-4">
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="firstname"
+            label="First Name"
+            name="firstname"
+            value={formData.firstname}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="secondname"
+            label="Second Name"
+            name="secondname"
+            value={formData.secondname}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="aimsid"
+            label="AIMS ID"
+            name="aimsid"
+            value={formData.aimsid}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <FormControl component="fieldset" className="text-gray-200">
+            <FormLabel component="legend">Gender</FormLabel>
+            <RadioGroup
+              row
+              aria-label="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="female" control={<Radio />} label="Female" />
+              <FormControlLabel value="male" control={<Radio />} label="Male" />
+            </RadioGroup>
+          </FormControl>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="dateofbirth"
+            label="Date of Birth"
+            name="dateofbirth"
+            type="date"
+            value={formData.dateofbirth}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="phonenumber"
+            label="Phone Number"
+            name="phonenumber"
+            value={formData.phonenumber}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <FormControl fullWidth variant="outlined" className="bg-gray-800 text-gray-200">
+            <InputLabel id="jamaat-label" className="text-gray-400">
+              Select Jamaat
+            </InputLabel>
+            <Select
+              labelId="jamaat-label"
+              id="jamaat"
+              name="jamaat"
+              value={formData.jamaat}
+              onChange={handleChange}
+              label="Select Jamaat"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {loading ? (
+                <MenuItem disabled>
+                  <CircularProgress size={20} />
+                </MenuItem>
+              ) : (
+                jamaats.map((jamaat) => (
+                  <MenuItem key={jamaat._id} value={jamaat._id}>
+                    {jamaat.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className="bg-blue-500 hover:bg-blue-600"
+          >
+            Register
+          </Button>
+          {validMsg && (
+            <Typography color="error" className="text-center">
+              {validMsg}
+            </Typography>
+          )}
+          <Typography variant="body2" className="text-gray-400 text-center">
+            Already Registered? <Link to="/login" className="text-blue-500 hover:underline">Login Here</Link>
+          </Typography>
+        </Box>
+      </Box>
+    </Container>
+  );
 }
 
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-`;
-
-
-const FormContainer = styled.div`
-    height: 100vh;
-    width: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1rem;
-    align-items: center;
-    background-color: #656565;
-    form {
-        span {
-            color: #fcfcfc;
-            text-transform: uppercase;
-            font-family: 'Montserrat', sans-serif;
-            a {
-                color: #fa3e3e;
-                text-decoration: none;
-                font-weight: bold;
-            }
-        }
-    }
-`;
-
-const ImageContainer = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #222020;
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-
-  div {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: center;  /* Align items vertically in the middle */
-    justify-content: flex-start;  /* Align items horizontally to the start of the container */
-  }
-
-  label {
-    color: #fcfcfc;
-    display: flex;  /* Make the label a flex container */
-    align-items: center;  /* Align label contents vertically in the middle */
-  }
-
-  input {
-    width: 100%;
-  }
-`;
-
-
-
-
-export default Register
+export default Register;

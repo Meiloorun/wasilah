@@ -1,8 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Wasilah from '../assets/Wasilah.svg';
-import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 
 const Navbar = () => {
   const nav = useNavigate();
@@ -17,69 +16,36 @@ const Navbar = () => {
   };
 
   return (
-    <NavbarContainer>
-      <LogoLink to="/">
-        <Logo src={Wasilah} alt="logo" />
-      </LogoLink>
-      <NavLinks>
-        <NavLink to="/home">Home</NavLink>
-        <NavLink to="/groups">Groups</NavLink>
-        {isLoggedIn() ? (
-          <ButtonLink onClick={handleLogout}>Logout</ButtonLink>
-        ) : (
-          <NavLink to="/login">Login</NavLink>
-        )}
-        {/* Add more links as needed */}
-      </NavLinks>
-    </NavbarContainer>
+    <AppBar position="static" sx={{ backgroundColor: '#424242' }}>
+      <Toolbar>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Link to="/">
+            <img src={Wasilah} alt="logo" style={{ height: '48px', marginRight: '16px' }} />
+          </Link>
+          <Typography variant="h6" sx={{ color: 'white' }}>
+            Wasilah
+          </Typography>
+        </Box>
+        <Box sx={{ ml: 'auto' }}>
+          <Link to="/home" sx={{ color: 'white', textDecoration: 'none', mr: '16px', '&:hover': { color: '#9e9e9e' } }}>
+            Home
+          </Link>
+          <Link to="/groups" sx={{ color: 'white', textDecoration: 'none', mr: '16px', '&:hover': { color: '#9e9e9e' } }}>
+            Groups
+          </Link>
+          {isLoggedIn() ? (
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          ) : (
+            <Link to="/login" sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: '#9e9e9e' } }}>
+              Login
+            </Link>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
-
-const NavbarContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: #2e2d2d;
-  color: #fcfcfc;
-`;
-
-const LogoLink = styled(Link)`
-  text-decoration: none;
-`;
-
-const Logo = styled.img`
-  height: 3rem;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-`;
-
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: #fcfcfc;
-  font-weight: bold;
-  font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
-  &:hover {
-    color: #616161;
-  }
-`;
-
-const ButtonLink = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #fcfcfc;
-  font-weight: bold;
-  font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
-  &:hover {
-    color: #616161;
-  }
-`;
 
 export default Navbar;

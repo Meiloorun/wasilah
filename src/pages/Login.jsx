@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { loginRoute } from '../utils/APIRoutes';
 import Logo from "../assets/Wasilah.svg";
 import axios from "axios";
+import { Box, TextField, Button, Typography, Container } from '@mui/material';
 
 
 function Login() {
@@ -63,91 +64,65 @@ function Login() {
   };
 
   return (
-    <>
-      <Container>
-        <FormContainer>
-          <form onSubmit={(event) => handleSubmit(event)}>
-            <div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {errors.email && <span>{errors.email}</span>}
-            </div>
-            <div>
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {errors.password && <span>{errors.password}</span>}
-            </div>
-            <div>
-              <button type="submit">Login</button>
-            </div>
-            <div>
-              <span>
-                <a>{validMsg}</a>
-              </span>
-            </div>
-            <span>
-              Not Registered? <Link to="/register">Register Here</Link>
-            </span>
-          </form>
-        </FormContainer>
-
-        <ImageContainer>
-          <img src={Logo} alt="Wasilah Logo" />
-        </ImageContainer>
-      </Container>
-    </>
+    <Container maxWidth="xl" className="h-screen flex justify-center items-center bg-gray-800">
+      <Box className="w-full max-w-md p-8 bg-gray-700 rounded-lg shadow-lg">
+        <Box component="form" onSubmit={handleSubmit} className="space-y-4">
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={formData.email}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange}
+            InputProps={{
+              className: 'bg-gray-800 text-gray-200',
+            }}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className="bg-blue-500 hover:bg-blue-600"
+          >
+            Login
+          </Button>
+          {validMsg && (
+            <Typography color="error" className="text-center">
+              {validMsg}
+            </Typography>
+          )}
+          <Typography variant="body2" className="text-gray-400 text-center">
+            Not Registered? <Link to="/register" className="text-blue-500 hover:underline">Register Here</Link>
+          </Typography>
+        </Box>
+      </Box>
+      <Box className="hidden md:flex items-center justify-center bg-gray-900 rounded-lg shadow-lg p-8">
+        <img src={Logo} alt="Wasilah Logo" className="max-w-xs" />
+      </Box>
+    </Container>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-`;
-
-
-const FormContainer = styled.div`
-    height: 100vh;
-    width: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1rem;
-    align-items: center;
-    background-color: #656565;
-    form {
-        span {
-            color: #fcfcfc;
-            text-transform: uppercase;
-            font-family: 'Montserrat', sans-serif;
-            a {
-                color: #fa3e3e;
-                text-decoration: none;
-                font-weight: bold;
-            }
-        }
-    }
-`;
-
-const ImageContainer = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #222020;
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-`;
 
 export default Login;
