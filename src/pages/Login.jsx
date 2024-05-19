@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom"
-import styled from 'styled-components';
+import { Link, useNavigate } from "react-router-dom";
 import { loginRoute } from '../utils/APIRoutes';
 import Logo from "../assets/Wasilah.svg";
 import axios from "axios";
-import { Box, TextField, Button, Typography, Container } from '@mui/material';
-
 
 function Login() {
   const nav = useNavigate();
 
   useEffect(() => {
-    if(localStorage.getItem('wasilah-user')) {
+    if (localStorage.getItem('wasilah-user')) {
       nav('/');
     }
-  })
+  }, [nav]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,13 +23,12 @@ function Login() {
         password,
       });
       console.log("user:", { data });
-      if (data.status === true){
+      if (data.status === true) {
         localStorage.setItem('wasilah-user', JSON.stringify(data.user));
         nav("/");
       } else {
         setValidMsg(data.msg);
       }
-      
     }
   };
 
@@ -41,7 +37,6 @@ function Login() {
     password: "",
   });
 
-  const [errors, setErrors] = useState({});
   const [validMsg, setValidMsg] = useState("");
 
   const handleChange = (e) => {
@@ -64,64 +59,55 @@ function Login() {
   };
 
   return (
-    <Container maxWidth="xl" className="h-screen flex justify-center items-center bg-gray-800">
-      <Box className="w-full max-w-md p-8 bg-gray-700 rounded-lg shadow-lg">
-        <Box component="form" onSubmit={handleSubmit} className="space-y-4">
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={formData.email}
-            onChange={handleChange}
-            InputProps={{
-              className: 'bg-gray-800 text-gray-200',
-            }}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={formData.password}
-            onChange={handleChange}
-            InputProps={{
-              className: 'bg-gray-800 text-gray-200',
-            }}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className="bg-blue-500 hover:bg-blue-600"
-          >
-            Login
-          </Button>
-          {validMsg && (
-            <Typography color="error" className="text-center">
-              {validMsg}
-            </Typography>
-          )}
-          <Typography variant="body2" className="text-gray-400 text-center">
-            Not Registered? <Link to="/register" className="text-blue-500 hover:underline">Register Here</Link>
-          </Typography>
-        </Box>
-      </Box>
-      <Box className="hidden md:flex items-center justify-center bg-gray-900 rounded-lg shadow-lg p-8">
-        <img src={Logo} alt="Wasilah Logo" className="max-w-xs" />
-      </Box>
-    </Container>
+    <div className="flex h-screen">
+      <div className="w-1/2 bg-gray-800 flex flex-col justify-center items-center p-8">
+        <div className="w-full max-w-md p-8 bg-gray-500 rounded-lg shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-gray-200 text-sm font-bold mb-2">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autoComplete="email"
+                required
+                className="w-full p-3 rounded focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-800 text-gray-200"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6">
+              <label htmlFor="password" className="block text-gray-200 text-sm font-bold mb-2">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                autoComplete="current-password"
+                required
+                className="w-full p-3 rounded focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-800 text-gray-200"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded"
+            >
+              Login
+            </button>
+            {validMsg && (
+              <p className="text-center text-red-500 mt-4">{validMsg}</p>
+            )}
+            <p className="text-gray-400 text-center mt-4">
+              Not Registered? <Link to="/register" className="text-red-500 hover:underline">Register Here</Link>
+            </p>
+          </form>
+        </div>
+      </div>
+      <div className="w-1/2 bg-gray-900 flex items-center justify-center">
+        <img src={Logo} alt="Wasilah Logo" className="max-w-full max-h-full" />
+      </div>
+    </div>
   );
 }
 

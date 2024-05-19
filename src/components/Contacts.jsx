@@ -22,7 +22,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
             selected={index === currentSelected}
             onClick={() => changeCurrentChat(index, contact)}
             className={`rounded-md transition-colors duration-300 ${
-              index === currentSelected ? 'bg-gray-600' : 'hover:bg-gray-600'
+              index === currentSelected ? 'bg-gray-700' : 'hover:bg-gray-800'
             }`}
           >
             <ListItemAvatar>

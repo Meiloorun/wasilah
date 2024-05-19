@@ -8,3 +8,5 @@ export const sendGroup = `${host}/api/messages/sendgrp`;
 export const getDmMessages = `${host}/api/messages/getdm`;
 export const getGroupMessages = `${host}/api/messages/getgrp`;
 export const getGroups = `${host}/api/groups/getGroups`;
+export const getGroup = `${host}/api/groups`;
+export const assignRole = `${host}/api/groups/assign-role`;

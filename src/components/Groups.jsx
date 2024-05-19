@@ -7,9 +7,9 @@ export default function Groups({ groups, currentUser, changeGroup }) {
 
   useEffect(() => {
     if (!Array.isArray(groups)) {
-      setGroupArray([groups])
+      setGroupArray([groups]);
     } else {
-      setGroupArray([groups])
+      setGroupArray(groups);
     }
   }, [groups]);
 
@@ -19,22 +19,24 @@ export default function Groups({ groups, currentUser, changeGroup }) {
   };
 
   return (
-    <Box className="overflow-hidden bg-gray-800 font-montserrat">
-      <Box className="flex flex-col items-center overflow-auto pt-4 gap-2">
+    <Box className="bg-gray-800 font-montserrat h-full">
+      <Box className="flex flex-col items-center overflow-auto pt-4 gap-4 h-full">
         {groupArray.length > 0 ? (
           groupArray[0].groups.map((group, index) => (
             <Box
               key={index}
               onClick={() => changeCurrentGroup(index, group)}
-              className={`w-11/12 cursor-pointer bg-gray-700 rounded-md p-2 transition duration-300 ease-in-out hover:bg-gray-600`}
+              className={`w-11/12 cursor-pointer bg-gray-700 rounded-lg p-4 transition duration-300 ease-in-out hover:bg-gray-600 ${
+                currentSelected === index ? 'bg-gray-600' : ''
+              }`}
             >
               <Typography variant="h6" className="text-white text-center">
-                {group?.name || 'Unnamed Group'}
+                {group.name || 'Unnamed Group'}
               </Typography>
             </Box>
           ))
         ) : (
-          <Typography variant="h6" className="text-white">
+          <Typography variant="h6" className="text-white mt-10">
             No groups found
           </Typography>
         )}

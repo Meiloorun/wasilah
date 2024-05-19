@@ -25,7 +25,7 @@ export default function ChatInput({ handleSendMsg }) {
   };
 
   return (
-    <Box className="flex items-center bg-gray-700 rounded-lg p-2">
+    <Box className="flex items-center bg-gray-800 rounded-lg p-2">
       <Box className="relative">
         <IconButton onClick={handleEmojiPickerHideShow} className="text-gray-400 hover:text-gray-200">
           <BsEmojiSmileFill />
@@ -50,7 +50,7 @@ export default function ChatInput({ handleSendMsg }) {
             </InputAdornment>
           }
           disableUnderline
-          className="bg-gray-800 text-gray-200 rounded-lg px-4 py-2"
+          className="bg-gray-500 text-gray-200 rounded-lg px-4 py-2"
         />
       </form>
     </Box>
