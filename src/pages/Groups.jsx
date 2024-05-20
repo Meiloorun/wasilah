@@ -9,7 +9,7 @@ import Welcome from '../components/Welcome';
 import ChatContainer from '../components/ChatContainer';
 import RoleAssignment from '../components/RoleAssignment';
 import { io } from "socket.io-client";
-import { Box, Grid, CircularProgress, Button, Modal } from '@mui/material';
+import { Box, Grid, CircularProgress, Button, Modal, Typography } from '@mui/material';
 
 function Group() {
   const socket = useRef();
@@ -80,7 +80,7 @@ function Group() {
               <Groups groups={groups} currentUser={currentUser} changeGroup={handleGroupChange} />
             )}
           </Grid>
-          <Grid item xs={3} className="border-r border-gray-600">
+          <Grid item xs={3} className="border-r border-gray-600 p-4">
             {currentGroup && (
               <>
                 <Channels currentGroup={currentGroup} changeChannel={handleChannelChange} />
@@ -88,7 +88,7 @@ function Group() {
                   variant="contained"
                   color="primary"
                   onClick={handleOpenRoleModal}
-                  sx={{ mt: 2 }}
+                  sx={{ mt: 2, width: '100%' }}
                 >
                   Assign Roles
                 </Button>

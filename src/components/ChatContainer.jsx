@@ -3,13 +3,11 @@ import ChatInput from './ChatInput';
 import axios from "axios";
 import { sendDM, sendGroup, getDmMessages, getGroupMessages } from '../utils/APIRoutes';
 import { v4 as uuidv4 } from "uuid";
-import { Avatar, Typography, Box, Button } from '@mui/material';
-import RoleAssignment from './RoleAssignment';
+import { Avatar, Typography, Box } from '@mui/material';
 
 export default function ChatContainer({ currentChat, currentUser, isGroup, socket }) {
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [showRoleAssignment, setShowRoleAssignment] = useState(false);
   const scrollRef = useRef();
 
   const getMessages = async () => {
@@ -96,7 +94,7 @@ export default function ChatContainer({ currentChat, currentUser, isGroup, socke
               </Box>
             )}
           </Box>
-          <Box sx={{ flex: 1, p: 2, overflowY: 'auto', maxHeight: '540px'}}>
+          <Box sx={{ flex: 1, p: 2, overflowY: 'auto', maxHeight: '500px'}}>
             {messages.map((message) => (
               <Message key={uuidv4()} message={message.message} fromSelf={message.fromSelf} sender={message.sender} isGroup={isGroup} />
             ))}
@@ -121,7 +119,7 @@ function Message({ message, fromSelf, sender, isGroup }) {
           </Typography>
         )}
         <Box
-          sx={{ px: 2, py: 1, borderRadius: '8px', backgroundColor: fromSelf ? '#616161' : '#1976d2', color: 'white' }}
+          sx={{ px: 2, py: 1, borderRadius: '8px', backgroundColor: fromSelf ? '#616161' : '#ef4444', color: 'white' }}
         >
           {message}
         </Box>
