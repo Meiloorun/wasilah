@@ -31,6 +31,7 @@ import Login from "./pages/Login";
 import Direct from "./pages/Direct";
 import Groups from "./pages/Groups";
 import Settings from "./pages/Settings";
+import ConsentInfo from './pages/ConsentInfo';
 
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/direct" element={<Direct />} />
         <Route path="/" element={<Groups />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/consent-info" element={<ConsentInfo />} />
       </Routes>
     </BrowserRouter> 
   )
